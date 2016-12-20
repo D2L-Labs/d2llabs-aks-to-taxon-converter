@@ -1,0 +1,22 @@
+{
+  "name": "d2llabs-aks-to-taxon-converter",
+  "version": "0.1.0",
+  "description": "A simple utility to convert exports of AKS standards data to a taxon path XML format campatible with D2L Brightspace",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "aks",
+    "taxon",
+    "d2llabs",
+    "d2l",
+    "lor"
+  ],
+  "author": "D2L Labs (D2L Corporation)",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "csv-parse": "^1.1.7",
+    "js2xmlparser": "^2.0.2"
+  }
+}

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Sample XML document containing a standard to be uploaded. -->
+<!-- Top element must be "LearningStandardDocument".  Only one instance of this element can exist. -->
+<LearningStandardDocument>
+	<!-- Any number of "LearningStandardItem" elements can exist within the "LearningStandardDocument" element. -->
+	<LearningStandardItem>
+		<!-- Only one instance of the "itemIdentifier" element may exist per "LearningStandardItem" element. -->
+		<!-- Only one instance of the "itemDescription" element may exist per "LearningStandardItem" element. -->
+		<!-- Each "LearningStandardItem" element must contain at least one of "itemIdentifier" or "itemDescription", and that element must have a value.  This means that if the element "itemDescription" is the only one to exist in a "LearningStandardItem" element, its child "itemText" element must have a value. -->
+		<itemIdentifier>AFF3669B-D129-4C58-A289-5C63093A8E65</itemIdentifier>
+		<itemDescription>
+			<!-- Only one instance of the "itemText" element may exist per "itemDescription" element. -->
+			<itemText>Strand 1: Reading Process</itemText>
+		</itemDescription>
+		<!-- Any number of "LearningStandardItem" elements can exist within a "LearningStandardItem" element.  However, within a "LearningStandardItem" element all instances of "itemIdentifier" and "itemDescription" must appear before any instances of "LearningStandardItem". -->
+		<LearningStandardItem>
+			<!-- An "itemIdentifier" element may be empty or omitted as long as the "itemText" element within the "itemDescription" element contains a value. -->
+			<itemDescription>
+				<itemText>PO 1. Acquire and use new vocabulary in relevant contexts.</itemText>
+			</itemDescription>
+		</LearningStandardItem>
+	</LearningStandardItem>
+	<LearningStandardItem>
+		<!-- An "itemDescription" element may be empty or omitted as long as the "itemIdentifier" element contains a value. -->
+		<itemIdentifier>E1C4AE91-BD2D-4FA2-8821-C26EFA85936B</itemIdentifier>
+		<LearningStandardItem>
+			<itemIdentifier>D717B652-4FA3-47A1-B79F-6E8DCDAE1495</itemIdentifier>
+			<itemDescription>
+				<itemText>PO 1. Draw inferences about meaning of new vocabulary, based on knowledge of linguistic roots and affixes (e.g., Latin, Greek, Anglo-Saxon).</itemText>
+			</itemDescription>
+		</LearningStandardItem>
+	</LearningStandardItem>
+</LearningStandardDocument>
