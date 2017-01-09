@@ -7,7 +7,12 @@ var parse = require('csv-parse');
 //extract the human-relevant portion of the outer LearningStandardItem - expected format is {Code}: {Human-Relevant Portion}
 //where {Code} is a 3+ letter code, and {Human-Relevant Portion} is a string of undetermined length
 function beautifyMain( main ) {
-	return main.slice( main.indexOf(":") + 1 ).trim();
+	var fixMain = main.slice( main.indexOf(":") + 1 ).trim();
+
+	if( !(new RegExp(/^((\u0009|\u000A|\u000D|[\u0020-\uD7FF])|([\uD800-\uDBFF][\uDC00-\uDFFF]))*$/).test(main)) ) {
+		fixMain = main.replace(/[^\u0009\u000A\u000D\u0020-\uD7FF\uD800-\uDBFF\uDC00-\uDFFF]/g, "");
+	}
+	return fixMain;
 }
 
 //check for invalid XML characters and remove them from the text of the lowest level LearningStandardItem entries
