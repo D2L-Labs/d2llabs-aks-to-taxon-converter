@@ -7,6 +7,8 @@ var iconv = require('iconv-lite');
 
 var aXmlErrors = new Array();
 
+//stop-gap solution to handling of invalid characters - now may be unnecessary due to improved file encoding handling
+//left for now to help ensure that script can execute without crashing
 function removeInvalidXmlChars( inputString, inputSource, loggingString ) {
 	var outputString = inputString;
 	if( !loggingString ) {
