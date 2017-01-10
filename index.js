@@ -3,16 +3,9 @@
 var js2xml = require('js2xmlparser');
 var fs = require('fs');
 var parse = require('csv-parse');
+var iconv = require('iconv-lite');
 
 var aXmlErrors = new Array();
-
-//simplify fancy quotes to comply with XML format
-function simplifyQuotes( s ) {
-	var sout = s;
-	sout = sout.replace(/’/g, "'");
-	sout = sout.replace(/[“”]/g, "\"");
-	return sout;
-}
 
 function removeInvalidXmlChars( inputString, inputSource, loggingString ) {
 	var outputString = inputString;
@@ -30,16 +23,15 @@ function removeInvalidXmlChars( inputString, inputSource, loggingString ) {
 //where {Code} is a 3+ letter code, and {Human-Relevant Portion} is a string of undetermined length
 function beautifyMain( main ) {
 	var fixMain = main.slice( main.indexOf(":") + 1 ).trim();
-	fixMain = simplifyQuotes( fixMain );
 	fixMain = removeInvalidXmlChars( fixMain, "TOP", main );
 	
 	return fixMain;
 }
 
 //check for invalid XML characters and remove them from the text of the lowest level LearningStandardItem entries
+//invalid XML check is now likely unnecessary due to change in input file encoding handling
 function beautifySub( sub ) {
 	var fixSub = sub;
-	fixSub = simplifyQuotes( fixSub );
 	fixSub = removeInvalidXmlChars( fixSub, "SUB", sub );
 
 	return fixSub;
@@ -158,27 +150,23 @@ var parser = parse( {delimiter: ','}, (err, data) => {
 	}
 	//END: Output XML File
 
+	var currentDate = new Date();
 	if( aXmlErrors.length > 0 ) {
 		console.warn("WARNING: Invalid XML characters detected, output results to: " + errorFileName);
-		fs.writeFile( errorFileName, aXmlErrors.join("\r\n\r\n") );
+		fs.writeFile( errorFileName, "### " + currentDate + ": " + aXmlErrors.length + " errors\r\n\r\n" + aXmlErrors.join("\r\n\r\n") );
+	} else {
+		if( fs.existsSync(errorFileName) ) {
+			fs.writeFile( errorFileName, "### " + currentDate + ": 0 errors")
+		}
 	}
 });
 
-//attempting to reaad file and remove fancy quotes, but input file encoding is non-standard, so not really working
-fs.readFile(inputFileName, 'utf8', function (err,data) {
-	if (err) {
-		return console.log(err);
-	}
-	var result = data.replace(/’/g, "'");
-	result = result.replace(/[“”]/g, "\"\"");
-
-	fs.writeFile(interimFileName, result, 'utf8', function (err) {
-		if (err) return console.log(err);
-
-		//pass the input file to the parser/processor function
-		fs.createReadStream( interimFileName ).pipe( parser );
-	});
-});
+//ensuring that the file encoding is one that will not cause issues
+iconv.skipDecodeWarning = true;
+var inputFileContents = fs.readFileSync(inputFileName, {encoding: "binary"});
+var outputFileContents = iconv.decode(inputFileContents, "win1251");
+fs.writeFileSync(interimFileName, outputFileContents);
+fs.createReadStream( interimFileName ).pipe( parser );
 
 
 //provide message to user to let them know it is still running

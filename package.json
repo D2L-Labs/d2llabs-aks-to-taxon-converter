@@ -17,6 +17,7 @@
   "license": "Apache-2.0",
   "dependencies": {
     "csv-parse": "^1.1.7",
+    "iconv-lite": "^0.4.15",
     "js2xmlparser": "^2.0.2"
   }
 }
