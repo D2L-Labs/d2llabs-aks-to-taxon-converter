@@ -4,24 +4,45 @@ var js2xml = require('js2xmlparser');
 var fs = require('fs');
 var parse = require('csv-parse');
 
+var aXmlErrors = new Array();
+
+//simplify fancy quotes to comply with XML format
+function simplifyQuotes( s ) {
+	var sout = s;
+	sout = sout.replace(/’/g, "'");
+	sout = sout.replace(/[“”]/g, "\"");
+	return sout;
+}
+
+function removeInvalidXmlChars( inputString, inputSource, loggingString ) {
+	var outputString = inputString;
+	if( !loggingString ) {
+			loggingString = inputString;
+	}
+
+	if( !(new RegExp(/^((\u0009|\u000A|\u000D|[\u0020-\uD7FF])|([\uD800-\uDBFF][\uDC00-\uDFFF]))*$/).test(outputString)) ) {
+		outputString = outputString.replace(/[^\u0009\u000A\u000D\u0020-\uD7FF\uD800-\uDBFF\uDC00-\uDFFF]/g, "");
+		aXmlErrors.push( inputSource + ":" + loggingString + '\r\n' + "Fix:" + outputString)
+	}
+	return outputString;
+}
 //extract the human-relevant portion of the outer LearningStandardItem - expected format is {Code}: {Human-Relevant Portion}
 //where {Code} is a 3+ letter code, and {Human-Relevant Portion} is a string of undetermined length
 function beautifyMain( main ) {
 	var fixMain = main.slice( main.indexOf(":") + 1 ).trim();
-
-	if( !(new RegExp(/^((\u0009|\u000A|\u000D|[\u0020-\uD7FF])|([\uD800-\uDBFF][\uDC00-\uDFFF]))*$/).test(main)) ) {
-		fixMain = main.replace(/[^\u0009\u000A\u000D\u0020-\uD7FF\uD800-\uDBFF\uDC00-\uDFFF]/g, "");
-	}
+	fixMain = simplifyQuotes( fixMain );
+	fixMain = removeInvalidXmlChars( fixMain, "TOP", main );
+	
 	return fixMain;
 }
 
 //check for invalid XML characters and remove them from the text of the lowest level LearningStandardItem entries
 function beautifySub( sub ) {
-	if( !(new RegExp(/^((\u0009|\u000A|\u000D|[\u0020-\uD7FF])|([\uD800-\uDBFF][\uDC00-\uDFFF]))*$/).test(sub)) ) {
-		var fixSub = sub.replace(/[^\u0009\u000A\u000D\u0020-\uD7FF\uD800-\uDBFF\uDC00-\uDFFF]/g, "");
-		return fixSub;
-	}
-	return sub;
+	var fixSub = sub;
+	fixSub = simplifyQuotes( fixSub );
+	fixSub = removeInvalidXmlChars( fixSub, "SUB", sub );
+
+	return fixSub;
 }
 
 //combine the top level LearningStandardItem with its children for adding into the array of top level items
@@ -47,7 +68,7 @@ var arrMains = new Array(); //an array to contain the top level items as returne
 //		node index.js INPUTFILENAME [OUTPUTFILENAME]
 //
 //output file will default to the input file name with a .xml file extension added to it
-var inputFileName = "", outputFileName = "";
+var inputFileName = "", outputFileName = "", errorFileName = "", interimFileName;
 switch ( process.argv.length ) {
 	case 3: //input file specified, but not output file
 		inputFileName = process.argv[2];
@@ -61,6 +82,9 @@ switch ( process.argv.length ) {
 		console.error( "ERROR: Missing command line arguments.\r\n\r\nUSAGE: \r\n node index.js INPUTFILENAME [OUTPUTFILENAME]\r\n\r\nOUTPUTFILENAME is optional, if ommitted the utility will use INPUTFILENAME and append a .xml extension\r\n");
 		return;
 }
+
+interimFileName = inputFileName + ".interim.csv";
+errorFileName = outputFileName + ".error.txt"
 
 //output helpful messages for files to be used
 console.log("Input file identified as: ", inputFileName);
@@ -133,10 +157,29 @@ var parser = parse( {delimiter: ','}, (err, data) => {
 		console.error("Try/Catch error with output to file:", e);
 	}
 	//END: Output XML File
+
+	if( aXmlErrors.length > 0 ) {
+		console.warn("WARNING: Invalid XML characters detected, output results to: " + errorFileName);
+		fs.writeFile( errorFileName, aXmlErrors.join("\r\n\r\n") );
+	}
 });
 
-//pass the input file to the parser/processor function
-fs.createReadStream( inputFileName ).pipe( parser );
+//attempting to reaad file and remove fancy quotes, but input file encoding is non-standard, so not really working
+fs.readFile(inputFileName, 'utf8', function (err,data) {
+	if (err) {
+		return console.log(err);
+	}
+	var result = data.replace(/’/g, "'");
+	result = result.replace(/[“”]/g, "\"\"");
+
+	fs.writeFile(interimFileName, result, 'utf8', function (err) {
+		if (err) return console.log(err);
+
+		//pass the input file to the parser/processor function
+		fs.createReadStream( interimFileName ).pipe( parser );
+	});
+});
+
 
 //provide message to user to let them know it is still running
 console.log("Processing...");
