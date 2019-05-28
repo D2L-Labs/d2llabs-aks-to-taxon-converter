@@ -155,10 +155,10 @@ var parser = parse( {delimiter: ','}, (err, data) => {
 	var currentDate = new Date();
 	if( aXmlErrors.length > 0 ) {
 		console.warn("WARNING: Invalid XML characters detected, output results to: " + errorFileName);
-		fs.writeFile( errorFileName, "### " + currentDate + ": " + aXmlErrors.length + " errors\r\n\r\n" + aXmlErrors.join("\r\n\r\n") );
+		fs.writeFileSync( errorFileName, "### " + currentDate + ": " + aXmlErrors.length + " errors\r\n\r\n" + aXmlErrors.join("\r\n\r\n") );
 	} else {
 		if( fs.existsSync(errorFileName) ) {
-			fs.writeFile( errorFileName, "### " + currentDate + ": 0 errors")
+			fs.writeFileSync( errorFileName, "### " + currentDate + ": 0 errors")
 		}
 	}
 });
