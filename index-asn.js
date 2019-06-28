@@ -202,7 +202,9 @@ var parser = parse( {delimiter: ','}, (err, data) => {
 		notation = currentFourthLevel.split(":")[0];
 		desc = removeInvalidChars(currentFourthLevel.split(":")[1],4);
 
-		mapOverall.get(placeholderVal).push(`\t\t|${eduLevel}|${notation}|${desc}`);
+		if( notation && desc ) {
+			mapOverall.get(placeholderVal).push(`\t\t|${eduLevel}|${notation}|${desc}`);
+		}
 
 	}
 
