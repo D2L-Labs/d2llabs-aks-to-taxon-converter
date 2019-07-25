@@ -138,12 +138,6 @@ let parser = parse( {delimiter: ','}, (err, data) => {
 	let maxDepth = 0, maxDepthIndex = 0, currentDepth = 0;
 	const HEADER_ROW = "Hierarchy|EducationLevel|Notation|Description";
 
-//4GM: General Music - 4,4GM.A: Skills and Techniques/Performance ,"4GM.A.1: sing, alone and with others, a varied repertoire of music",4GM.A.1.a: sing melodies expressively using appropriate head voice (accompanied and unaccompanied) demonstrating awareness of the tonal center
-	//Hierarchy|EducationLevel|Notation|Description
-	//|4||General Music
-	//\t|4|4GM.A|Skills and Techniques/Performance
-	//\t\t|4|4GM.A.1|sing, alone and with others, a varied repertoire of music
-	//\t\t|4|4GM.A.1.a|sing melodies expressively using appropriate head voice (accompanied and unaccompanied) demonstrating awareness of the tonal center
 	let currentFirstLevel = "", currentSecondLevel = "", currentThirdLevel = "", currentFourthLevel, currentGradeLevel = "", currentNotation = "", placeholderVal, prevPlaceholderVal = "";
 	let prevFirstLevel = "", prevSecondLevel = "", prevThirdLevel = "";
 
