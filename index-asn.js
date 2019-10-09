@@ -40,7 +40,7 @@ function removeInvalidChars( inputString, inputSource, loggingString ) {
 let inputFileName = "", outputFileNameTemplate = "", outputPlaceHolder = "~!@!~", errorFileName = "", interimFileName, outputFileName, outputFolderName;
 
 if( process.argv.length < 3 ) {
-	console.error( "ERROR: Missing command line arguments.\r\n\r\nUSAGE: \r\n node index.js INPUTFILENAME [MAPPINGFILENAME] [OUPUTEXCLUSIONS]\r\n\r\nMAPPINGFILENAME is optional\r\nOUTPUTEXCLUSIONS is optional (0 {default} = do not output exlusions, 1 = output exlusions to file)");
+	console.error( "ERROR: Missing command line arguments.\r\n\r\nUSAGE: \r\n node index-asn.js INPUTFILENAME [MAPPINGFILENAME] [OUPUTEXCLUSIONS]\r\n\r\nMAPPINGFILENAME is optional\r\nOUTPUTEXCLUSIONS is optional (0 {default} = do not output exlusions, 1 = output exlusions to file)");
 	return;
 }
 
