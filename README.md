@@ -15,8 +15,8 @@ npm install
 ## Running
 
 USAGE:
-   node index.js INPUTFILENAME [OUTPUTFILENAME]
-   node index-asn.js INPUTFILENAME [MAPPINGFILENAME] [OUPUTEXCLUSIONS]
+ * node index.js INPUTFILENAME [OUTPUTFILENAME]
+ * node index-asn.js INPUTFILENAME [MAPPINGFILENAME] [OUPUTEXCLUSIONS]
 
 ## Contributing
 Contributions are welcome, please submit a pull request!
