@@ -40,7 +40,7 @@ function removeInvalidChars( inputString, inputSource, loggingString ) {
 let inputFileName = "", outputFileNameTemplate = "", outputPlaceHolder = "~!@!~", errorFileName = "", interimFileName, outputFileName, outputFolderName;
 
 if( process.argv.length < 3 ) {
-	console.error( "ERROR: Missing command line arguments.\r\n\r\nUSAGE: \r\n node index.js INPUTFILENAME [MAPPINGFILENAME]\r\n\r\nMAPPINGFILENAME is optional\r\n");
+	console.error( "ERROR: Missing command line arguments.\r\n\r\nUSAGE: \r\n node index.js INPUTFILENAME [MAPPINGFILENAME] [OUPUTEXCLUSIONS]\r\n\r\nMAPPINGFILENAME is optional\r\nOUTPUTEXCLUSIONS is optional (0 {default} = do not output exlusions, 1 = output exlusions to file)");
 	return;
 }
 
@@ -60,6 +60,13 @@ if( process.argv.length >= 4 ) {
 		for( let exclusion of mapping.exclusions ) {
 			mapExclusions.set(exclusion, mapping.group);
 		}
+	}
+}
+
+let outputExclusions = false;
+if( process.argv.length >= 5 ) {
+	if( parseInt(process.arv[4]) == 1 ) {
+		outputExclusions = true;
 	}
 }
 
@@ -169,8 +176,6 @@ let parser = parse( {delimiter: ','}, (err, data) => {
 
 		if( currentFirstLevel != prevFirstLevel ) {
 
-			if(!isNaN(eduLevel)) console.log(currentFirstLevel);
-
 			notation = currentFirstLevel.split(":")[0];
 			desc = removeInvalidChars(currentFirstLevel.split(":")[1], 1);
 
@@ -222,16 +227,18 @@ let parser = parse( {delimiter: ','}, (err, data) => {
 		}
 	}
 
-	for( let placeholder of mapOverallExclusions.keys() ) {
-		if( mapOverallExclusions.get(placeholder).length > 0 ) {	//there are no header rows in the exclusions array
-			outputFileName = outputFileNameTemplate.replace(outputPlaceHolder, `_zz_excluded-${placeholder.replace(/[\\/:*?\"<>|]/g,"")}`);
-			fs.writeFileSync(outputFileName, mapOverallExclusions.get(placeholder).join("\r\n"), options);
+	if( outputExclusions ) {
+		for( let placeholder of mapOverallExclusions.keys() ) {
+			if( mapOverallExclusions.get(placeholder).length > 0 ) {	//there are no header rows in the exclusions array
+				outputFileName = outputFileNameTemplate.replace(outputPlaceHolder, `_zz_excluded-${placeholder.replace(/[\\/:*?\"<>|]/g,"")}`);
+				fs.writeFileSync(outputFileName, mapOverallExclusions.get(placeholder).join("\r\n"), options);
+			}
 		}
 	}
 
 	var currentDate = new Date();
 	if( aErrors.length > 0 ) {
-		console.warn("WARNING: Invalid XML characters detected, output results to: " + errorFileName);
+		console.warn("WARNING: Invalid characters detected, output results to: " + errorFileName);
 		fs.writeFileSync( errorFileName, "### " + currentDate + ": " + aErrors.length + " errors\r\n\r\n" + aErrors.join("\r\n\r\n") );
 	} else {
 		if( fs.existsSync(errorFileName) ) {
