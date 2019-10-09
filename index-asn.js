@@ -113,11 +113,9 @@ let parser = parse( {delimiter: ','}, (err, data) => {
 
 	//add grouping to the first column of every row
 	for( let row of data ) {
-		let grouping = row[0].substr(0,1);
+		let grouping = row[0].split(":")[0];
 		let found = false;
-		if( isNaN(grouping) ) {
-			grouping = row[0].split(":")[0]
-		}
+
 		for( let mapping of mapMappings.keys() ) {
 			if( grouping.substr(0, mapping.length) == mapping ) {
 				grouping = mapMappings.get(mapping);
@@ -170,6 +168,9 @@ let parser = parse( {delimiter: ','}, (err, data) => {
 		}
 
 		if( currentFirstLevel != prevFirstLevel ) {
+
+			if(!isNaN(eduLevel)) console.log(currentFirstLevel);
+
 			notation = currentFirstLevel.split(":")[0];
 			desc = removeInvalidChars(currentFirstLevel.split(":")[1], 1);
 
