@@ -16,7 +16,7 @@
   "author": "D2L Labs (D2L Corporation)",
   "license": "Apache-2.0",
   "dependencies": {
-    "csv-parse": "^1.1.7",
+    "csv-parse": "^4.6.3",
     "iconv-lite": "^0.4.15",
     "js2xmlparser": "^2.0.2"
   }
