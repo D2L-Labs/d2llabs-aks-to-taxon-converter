@@ -1,6 +1,6 @@
 const fs = require('fs');
 
-const baseFileName = './_sample/AKS-mapping-workbook2023';
+const baseFileName = './mappings/mapping-workbook.2023';
 const csvData = fs.readFileSync(`${baseFileName}.csv`, { encoding: 'utf-8'});
 
 const arrCsvData = csvData.replaceAll('\r\n', '\n').split('\n');
@@ -28,7 +28,7 @@ arrCsvData.forEach((value, index) => {
 })
 
 // combine the new mappings with the old mappings
-const originalMappings = require('./_sample/mappings.json');
+const originalMappings = require('./mappings/mappings.json');
 originalMappings.forEach((obj) => {
   const { group, prefixes, exclusions } = obj;
 
@@ -52,7 +52,7 @@ Object.entries(mappings).forEach((entry) => {
   arrOutput.push({ group, prefixes, exclusions });
 })
 
-fs.writeFileSync(`${baseFileName}.mappings.json`, JSON.stringify(arrOutput, null, 2), { encoding: 'utf-8'});
+fs.writeFileSync(`${baseFileName.replace('/mappings/', '/_sample/')}.mappings.json`, JSON.stringify(arrOutput, null, 2), { encoding: 'utf-8'});
 
 
 

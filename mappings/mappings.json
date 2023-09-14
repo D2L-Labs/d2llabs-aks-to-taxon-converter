@@ -1,0 +1,62 @@
+[
+	{
+		"group": "Language Arts",
+		"prefixes": ["4LA","5LA","6LA","7LA","8LA","ELLS","LA","OWC","WW", "LTC"],
+		"exclusions": ["6JO","7JO","8JO"]
+	},
+	{
+		"group": "Mathematics",
+		"prefixes": ["4MA","5MA","6MA","7MA","8MA","CRM","GSAC","MAA","MAC","MAD","MAE","MAG","MAL","MAM3","MAM4","MAMC","MAMF","MAN","MAP","MAS","MM"],
+		"exclusions": []
+	},
+	{
+		"group": "Science",
+		"prefixes": ["4SC","4STE","5SC","5STE","6SC","7SC","8SC","SC"],
+		"exclusions": []
+	},
+	{
+		"group": "Social Studies",
+		"prefixes": ["4SS","5SS","6SS","7SS","8SS","SS"],
+		"exclusions": []
+	},
+	{
+		"group": "Gifted",
+		"prefixes": ["GEDS","GEQU"],
+		"exclusions": ["GEDS","GEQU"]
+	},
+	{
+		"group": "English to Speakers of Other Languages",
+		"prefixes": ["ELA","ELD","ELI","ESO"],
+		"exclusions": ["ELA","ELD","ELI","ESO"]
+	},
+	{
+		"group": "Career and Technical Education",
+		"prefixes": ["6PL","7PL","8PL","6SK","7SK","8SK","6HS","7HS","8HS","6MG","7MG","8MG","6ET","7ET","8ET","6CS","7CS","8CS","GT","SKSP","TE"],
+		"exclusions": ["6CC","7CC","8CC","6FC","7FC","8FC","7BI","8CO","8NA","TEH4","TEM7","TEG9","TEE5","TEE6","GTRA","TEK2","TEI6","TED3","TEI7","TEL7","TEI8","TEJ1","TEL8","TEH5","TED5","TED6","TEA2","TEE7","TEE8","TETA8","TETA5","TETA4","TEN8","TETA7","TEA3","TED7","TEHC1","TECH2","TEK8","TEK9","TEL9","TEM1","TEK3","TEK4","TEHDP","TEA4","TEI1","TEI2","TEI3","TEM2","TEH6","TEH2","TEH3","TEJ3","TEM3","TEJ4","TEJ5","TEM4","TEA7","TETF1","TETF2","TEL1","TEL2","TEA8","TEM5","TEA9","TEB1","TEHM","TEMN","TEB3","GTRF","TEB4","TEHFE","TEI4","TEI5","TEJ6","TEHHS","TED8","TEK5","TEK6","TEF8","TEB5","TEB7","TED9","TEB8","TEB9","TEC2","TEC3","TEE1","TEC6","TEC7","TEE2","TEC8","TEK7","TEM6","TEG2","TEC9","TEN9","TEO1","TETM","GTRM","TEAFN","TEO2","TEO3","TEO4","TEO5","TEJ8","TEHPC","TEHPO","TEADD","TEM8","TEN7","TEN1","TEE3","TEK1","TEHS1","TEHS2","TEG8","TEL4","TED4","TEE4"]
+	},
+	{
+		"group": "Fine Arts",
+		"prefixes": ["4GM","5GM","4FT","5FT","6FT","7FT","8FT","4FV","5FV","6FV","7FV","8FV","7AT","8FVAA","8FTAT","FA","FP","FT","FV","IM","MAMT","MB","MI","MS","VM"],
+		"exclusions": ["6MT","7MT","8MT","FAD6","FPD6","FAD7","MIMT","FPD7","FAD8","FPD8","FAAD","FVC1","FVC2","FVC3","FVC4","FVCR1","FVCR2","FADC","FAMD","FATD","FVJM1","FVJM2","FVJM3","FVJM4","FAID","FVPM1","FVPM2","FVPM3","FVPM4","FVS1","FVS2","FVS3","FVS4","FATM"]
+	},
+	{
+		"group": "Modern/Classical Language",
+		"prefixes": ["4ML","5ML","6ML","7ML","8ML","7L1","8L1","ASL","CLL","LT","ML"],
+		"exclusions": []
+	},
+	{
+		"group": "Health and Physical Education",
+		"prefixes": ["4HE","5HE","6HE","7HE","8HE","4PE","5PE","6PE","7PE","8PE","HL"],
+		"exclusions": []
+	},
+	{
+		"group": "Peer Leadership",
+		"prefixes": ["GCPL"],
+		"exclusions": []
+	},
+	{
+		"group": "JROTC",
+		"prefixes": ["JLC","RC"],
+		"exclusions": ["JLC","RC"]
+	}
+]
