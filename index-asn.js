@@ -240,7 +240,9 @@ var options = {declaration: {
 
 const HEADER_ROW = "Hierarchy|EducationLevel|Notation|Description";
 
-const HS_EDULEVEL = "9,10,11,12";
+const EDULEVEL_ELEM = "K,1,2,3,4,5";
+const EDULEVEL_MS = "6,7,8";
+const EDULEVEL_HS = "9,10,11,12";
 
 //output helpful messages for files to be used
 console.log("Input file identified as: ", inputFileName);
@@ -248,7 +250,7 @@ console.log("Output filename template identified as: ", outputFileNameTemplate);
 
 let arraySorter = (a, b) => {
 	const [, aGrade, aNotation] = a.split('|');
-	const [, bGrade, bNotation] = b.split('|')[2];
+	const [, bGrade, bNotation] = b.split('|');
 
 	const arrA = aNotation.split('.');
 	const arrB = bNotation.split('.');
@@ -256,9 +258,11 @@ let arraySorter = (a, b) => {
 	// console.log(arrA, arrB);
 	let depth = 0;
 	while( arrA[depth] === arrB[depth] ) {
+		if ((depth >= arrA.length) && (depth >= arrB.length)) {
+			return 0;
+		}
 		depth += 1;
 	}
-
 	
 	const compareA = (depth < arrA.length) ? arrA[depth] : '';
 	const numA = Number.parseInt(compareA, 10);
@@ -274,6 +278,10 @@ let arraySorter = (a, b) => {
 			biggerThanA = true;
 		} else if (bGrade === 'K') {
 			biggerThanA = false;
+		} else if (aGrade.startsWith('K')) {
+			biggerThanA = true;
+		} else if (bGrade.startsWith('K')) {
+			biggerThanA = false;
 		} else {
 			biggerThanA = (bGrade > aGrade);
 		}
@@ -283,11 +291,13 @@ let arraySorter = (a, b) => {
 		biggerThanA = (numA < numB);
 	}
 
+	// console.log(`${aNotation}\t${bNotation}\t${biggerThanA}`);
+	
 	if (biggerThanA) {
-		return 1;
+		return -1;
 	}
 
-	return-1;
+	return 1;
 }
 
 let mapOverall = new Map();
@@ -310,14 +320,6 @@ let parser = parse( {delimiter: ','}, (err, data) => {
 	for( let row of data ) {
 		let grouping = row[0].split(":")[0];
 		let found = false;
-
-		// for( let mapping of mapMappings.keys() ) {
-		// 	if( grouping.substr(0, mapping.length) == mapping ) {
-		// 		grouping = mapMappings.get(mapping);
-		// 		found = true;
-		// 		break;
-		// 	}
-		// }
 
 		let maxMappingLength = 0;
 		for( let mapping of mapMappings.keys() ) {
@@ -369,14 +371,16 @@ let parser = parse( {delimiter: ','}, (err, data) => {
 		//placeholderVal = eduLevel;
 		if (currentFirstLevel.startsWith('ML')) {
 			if (mlPrefix.endsWith('6-8') || mlPrefix.endsWith('678')) {
-				eduLevel = '6,7,8';
+				eduLevel = EDULEVEL_MS;
 			} else if (mlPrefix.slice(-3) === 'MS7'|| mlPrefix.slice(-3) === 'MS8') {
 				eduLevel = mlPrefix.slice(-1);
 			} else {
-				eduLevel = HS_EDULEVEL;
+				eduLevel = EDULEVEL_HS;
 			}
+		} else if (currentFirstLevel.startsWith('ESBC')) {
+			eduLevel = EDULEVEL_ELEM;
 		} else if (isNaN(eduLevel) && (eduLevel !== 'K')) {
-			eduLevel = HS_EDULEVEL;
+			eduLevel = EDULEVEL_HS;
 		}
 
 		if (mlPrefix.startsWith('ML')) {
@@ -404,9 +408,6 @@ let parser = parse( {delimiter: ','}, (err, data) => {
 		};
 
 		if( currentFirstLevel != prevFirstLevel ) {
-
-			// notation = currentFirstLevel.split(":")[0];
-			// desc = removeInvalidChars(currentFirstLevel.split(":")[1], 1, null, notation);
 			({ notation, desc } = getNotationAndDesc(currentFirstLevel, 1));
 
 			targetMap = mapOverall;
@@ -423,16 +424,6 @@ let parser = parse( {delimiter: ','}, (err, data) => {
 		}
 
 		if( currentSecondLevel != prevSecondLevel ) {
-			// const arrLevelSplit = currentSecondLevel.split(":");
-			// notation = arrLevelSplit[0];
-			// let baseDesc;
-			// if (arrLevelSplit.length > 2) {
-			// 	baseDesc = arrLevelSplit.slice(1).join(':');
-			// } else {
-			// 	baseDesc = arrLevelSplit[1];
-			// }
-			// desc = removeInvalidChars(baseDesc, 2, null, notation);
-
 			({ notation, desc } = getNotationAndDesc(currentSecondLevel, 2));
 
 			targetMap.get(placeholderVal).push(`\t|${eduLevel}|${notation}|${desc}`);
@@ -441,8 +432,6 @@ let parser = parse( {delimiter: ','}, (err, data) => {
 		}
 
 		if( currentThirdLevel != prevThirdLevel ) {
-			// notation = currentThirdLevel.split(":")[0];
-			// desc = removeInvalidChars(currentThirdLevel.split(":")[1],3, null, notation);
 			({ notation, desc } = getNotationAndDesc(currentThirdLevel, 3));
 
 			targetMap.get(placeholderVal).push(`\t\t|${eduLevel}|${notation}|${desc}`);
@@ -450,14 +439,11 @@ let parser = parse( {delimiter: ','}, (err, data) => {
 			prevThirdLevel = currentThirdLevel;
 		}
 
-		// notation = currentFourthLevel.split(":")[0];
-		// desc = removeInvalidChars(currentFourthLevel.split(":")[1],4, null, notation);
 		({ notation, desc } = getNotationAndDesc(currentFourthLevel, 4));
 
 		if( notation && desc ) {
 			targetMap.get(placeholderVal).push(`\t\t|${eduLevel}|${notation}|${desc}`);
 		}
-
 	}
 
 	for (const [key, val] of Object.entries(mML)) {
